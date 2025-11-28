@@ -13,7 +13,7 @@ A modern, responsive portfolio website built with React and Vite, featuring an A
 
 ## 🚀 Live Demo
 
-[View Live Portfolio](your-deployed-url-here.com)
+[View Live Portfolio](profile-63a76g8hn-aobakwe-modillanes-projects.vercel.app)
 
 ## 🛠️ Built With
 
