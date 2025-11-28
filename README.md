@@ -1,8 +1,6 @@
 # 🌸 Aobakwe Modillane - Portfolio Website
 
-A modern, responsive portfolio website built with React and Vite, featuring an AI-powered chatbot to answer questions about my journey as a Full Stack Developer.
-
-![Portfolio Preview](./public/assets/portfolio-preview.png)
+A modern, responsive portfolio website built with React and Vite, featuring an AI-powered chatbot to answer questions about my journey as a Full Stack Developer
 
 ## ✨ Features
 
