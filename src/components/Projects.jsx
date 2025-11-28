@@ -17,7 +17,7 @@ const projects = [
     title: "MuseCareers",
     description: "A career development app allowing users to upload their CV and specify desired skills, providing personalized recommendations for skill enhancement and career growth.",
     image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&h=250&fit=crop",
-    link: "https://hub.docker.com/r/boikanyomz/musecareer-backend"
+    link: "https://github.com/BM023/MuseCareer.git"
   },
   {
     title: "MuseMotion",
