@@ -2,7 +2,8 @@
 
 A modern, responsive portfolio website built with React and Vite, featuring an AI-powered chatbot to answer questions about my journey as a Full Stack Developer.
 
-![Portfolio Preview](./public/assets/portfolio-preview.png)
+![Uploading Screenshot 2025-11-28 113041.png…]()
+
 
 ## ✨ Features
 
