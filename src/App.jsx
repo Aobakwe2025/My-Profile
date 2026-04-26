@@ -9,7 +9,6 @@ import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 import Chatbot from "./components/Chatbot";
 
-
 const App = () => {
   return (
     <>
@@ -20,6 +19,7 @@ const App = () => {
         <Experience />
         <Skills />
         <Projects />
+        <Certifications />
         <Contact />
       </main>
       <Chatbot />
