@@ -7,6 +7,7 @@ import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import Chatbot from "./components/Chatbot";
+import Certifications from "./components/Certifications";
 
 const App = () => {
   return (
