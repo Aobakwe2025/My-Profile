@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaRobot, FaTimes } from "react-icons/fa";
 
 const Chatbot = () => {
@@ -6,69 +6,102 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const aboutAobakwe = `
-You are a friendly chatbot assistant on Aobakwe Modillane's portfolio website. Answer questions about Aobakwe based on this information:
+You are a friendly AI assistant on Aobakwe Modillane's portfolio website. Answer questions about Aobakwe based on this information:
 
 **About Aobakwe:**
 - Full Name: Aobakwe Modillane
 - Pronouns: She/Her
-- From: South Africa
-- Current Role: Full Stack Developer & Designer
-- Dreams: Aobakwe dreams of becoming a leading software engineer who creates innovative solutions that make a positive impact on people's lives. She aspires to work on cutting-edge AI and web technologies, and eventually start her own tech company.
-
-**Hobbies:**
-- Coding and building web applications
-- Learning new programming languages and frameworks
-- Reading about technology and innovation
-- Playing video games
-- Photography
-- Exploring data science and AI
-
-**Fun Facts:**
-- Created multiple projects including MuseMinds (AI poem generator), MuseCareers (CV enhancement tool), and MuseMotion (data analysis app)
-- Passionate about combining creativity with technology
-- Loves experimenting with new tech stacks
-- Active on GitHub and constantly learning
-- Enjoys building projects that solve real-world problems
-- Strong advocate for women in tech
-
-**Skills:**
-HTML, CSS, JavaScript, React, Node.js, Express, MongoDB, Git, Python, SQL
-
-**Contact:**
-- Email: aobakwemodillane27@gmail.com
+- Location: Johannesburg, South Africa
+- Role: Aspiring Data Engineer | Full Stack Developer
+- Contact: aobakwemodillane27@gmail.com | 081 560 6089
 - GitHub: github.com/Aobakwe2025
-- Instagram: @oky_abk
+- LinkedIn: linkedin.com/in/aobakwe-modillane-954b052a5
 
-Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and enthusiastic when answering questions! Keep responses under 100 words.
+**Education & Training:**
+- FNB App Academy Graduate (IT Varsity, July 2025) — specialised in Data Management & Analysis, Backend Development, Cloud Computing, Database Design
+- CAPACITI Professional Development Programme (ongoing)
+
+**Certifications (23 total):**
+Data Engineering: Introduction to Data Engineering (IBM), Python Project for Data Engineering (IBM), Data Engineering Capstone Project (IBM), ETL and Data Pipelines with Shell, Airflow and Kafka (IBM), Data Warehouse Fundamentals (IBM), Introduction to Big Data with Spark and Hadoop (IBM), Machine Learning with Apache Spark (IBM), Generative AI: Elevate your Data Engineering Career (IBM), Data Engineer Practitioner SFIA (Coursera).
+Databases: Relational Database Administration DBA (IBM), Introduction to Relational Databases RDBMS (IBM), Introduction to NoSQL Databases (IBM), Advanced Data Modeling (Meta).
+Programming: Python for Data Science AI & Development (IBM), Python for Data Visualization Matplotlib & Seaborn (Coursera), Hands-on Introduction to Linux Commands and Shell Scripting (IBM), BI Dashboards with IBM Cognos Analytics and Google Looker (IBM).
+Cloud & DevOps: AWS Cloud Practitioner Essentials, DevOps on AWS, Intro to Containers Docker Kubernetes OpenShift (all AWS/IBM Dec 2025).
+AI/ML: Generative AI with Large Language Models (DeepLearning.AI), Introduction to Generative AI (Google Cloud).
+Professional: Solving Problems with Creative and Critical Thinking (IBM, Apr 2026).
+
+**Technical Skills:**
+- Data Engineering: ETL Pipelines, Apache Spark, Apache Hadoop, Data Warehousing, Data Modeling, PySpark, Data Lakes
+- Programming: Python (pandas, NumPy, PySpark), SQL, JavaScript, YAML
+- Databases: MySQL, PostgreSQL, MongoDB
+- Cloud: AWS (EC2, S3, Data Migration), Google Cloud Platform (GCP), Microsoft Azure
+- DevOps: Docker, Kubernetes, OpenShift, CI/CD Pipelines, Git
+- Frontend: React, HTML, CSS, Vite
+- AI/ML: Generative AI, LLMs, Claude AI API, Machine Learning
+
+**Projects:**
+1. MuseMotion — EV Data Platform: ETL pipeline transforming raw electric vehicle data. Python automation reduced manual processing by 80%. 99% data accuracy. Tech: Python, SQL, Streamlit.
+2. AI-Powered Portfolio: Full-stack web app with Claude AI chatbot, deployed on Vercel with AWS. Sub-2-second load times. Tech: React, Vite, Claude AI, AWS.
+3. MuseCareers — AI Career Platform: CV evaluation system with ML-based candidate matching. Tech: JavaScript, AI/ML.
+4. MuseMinds — AI Poem Generator: LLM-powered poetry with 3 emotional themes. Tech: React, AI/ML.
+5. GeoTrace: IP geolocation app via serverless API proxy. Tech: HTML, JavaScript.
+6. Python Memory Game: Browser-based card-matching game with Python fun facts.
+7. Zoo Website: Informational web app about animal species.
+
+**Leadership:**
+- District President, Gauteng RCL (2023) — led data-driven initiatives, represented Gauteng at National RCL Summit
+
+**Languages:** Setswana (Fluent), English (Fluent), Afrikaans (Moderate)
+**Availability:** Immediate | South African Citizen
+
+**Personality & Dreams:**
+- Passionate about making data accessible and meaningful
+- Strong advocate for women in STEM
+- Dreams of building scalable data systems that power meaningful decisions across Africa
+- Wants to merge technology with Political Science to address societal challenges
+- Self-taught, resilient, and driven by impact
+
+Always use she/her pronouns. Be friendly, concise, and enthusiastic. Keep responses under 120 words.
 `;
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
     const userMessage = { role: "user", content: input };
+    const currentInput = input;
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
     try {
-      const conversationHistory = messages.map(msg => ({
+      const conversationHistory = messages.map((msg) => ({
         role: msg.role,
-        content: msg.content
+        content: msg.content,
       }));
 
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "anthropic-version": "2023-06-01"
+          "x-api-key": import.meta.env.VITE_ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 500,
+          max_tokens: 300,
           system: aboutAobakwe,
-          messages: [...conversationHistory, { role: "user", content: input }],
+          messages: [...conversationHistory, { role: "user", content: currentInput }],
         }),
       });
 
@@ -86,7 +119,8 @@ Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and
       console.error("Chatbot error:", error);
       const errorMessage = {
         role: "assistant",
-        content: "I'm having trouble connecting right now. But I can tell you that Aobakwe is a talented Full Stack Developer from South Africa who dreams of becoming a leading software engineer. She's passionate about AI, web technologies, and creating innovative solutions. Feel free to ask me more specific questions!",
+        content:
+          "I'm having a little trouble connecting right now 🌸 But I can tell you that Aobakwe is a talented Data Engineer and Full Stack Developer from Johannesburg, South Africa — passionate about ETL pipelines, AI, and building tech that creates real impact. Feel free to explore her projects above!",
       };
       setMessages((prev) => [...prev, errorMessage]);
     }
@@ -107,7 +141,6 @@ Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and
 
   return (
     <>
-      {/* Floating Chat Button */}
       <button
         className={`chatbot-float-btn ${isOpen ? "hidden" : ""}`}
         onClick={() => setIsOpen(true)}
@@ -116,13 +149,12 @@ Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and
         <FaRobot />
       </button>
 
-      {/* Chat Window */}
       {isOpen && (
         <div className="chatbot-popup">
           <div className="chatbot-header">
             <div>
               <h3>Ask About Aobakwe 🤖</h3>
-              <p className="chatbot-status">Online • Powered by AI</p>
+              <p className="chatbot-status">Online • Powered by Claude AI</p>
             </div>
             <button onClick={() => setIsOpen(false)} className="chatbot-close">
               <FaTimes />
@@ -133,23 +165,23 @@ Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and
             {messages.length === 0 && (
               <div className="chatbot-welcome">
                 <div className="welcome-icon">👋</div>
-                <h4>Hi there! I'm Aobakwe's AI assistant.</h4>
+                <h4>Hi! I'm Aobakwe's AI assistant.</h4>
                 <p>Ask me anything about her:</p>
                 <div className="suggestion-chips">
+                  <button onClick={() => handleSuggestionClick("What data engineering projects has she built?")}>
+                    🗄️ Data projects
+                  </button>
+                  <button onClick={() => handleSuggestionClick("What certifications does Aobakwe have?")}>
+                    🏆 Her certifications
+                  </button>
+                  <button onClick={() => handleSuggestionClick("What are Aobakwe's technical skills?")}>
+                    💻 Her skills
+                  </button>
                   <button onClick={() => handleSuggestionClick("What does Aobakwe dream of becoming?")}>
                     💭 Her dreams
                   </button>
-                  <button onClick={() => handleSuggestionClick("What are Aobakwe's hobbies?")}>
-                    🎨 Her hobbies
-                  </button>
-                  <button onClick={() => handleSuggestionClick("Tell me fun facts about Aobakwe")}>
-                    ⚡ Fun facts
-                  </button>
-                  <button onClick={() => handleSuggestionClick("Where is Aobakwe from?")}>
-                    📍 Her location
-                  </button>
-                  <button onClick={() => handleSuggestionClick("What are Aobakwe's skills?")}>
-                    💻 Her skills
+                  <button onClick={() => handleSuggestionClick("How can I contact Aobakwe?")}>
+                    📩 Contact info
                   </button>
                 </div>
               </div>
@@ -157,9 +189,7 @@ Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and
 
             {messages.map((msg, idx) => (
               <div key={idx} className={`chat-message ${msg.role}`}>
-                <div className="message-bubble">
-                  {msg.content}
-                </div>
+                <div className="message-bubble">{msg.content}</div>
               </div>
             ))}
 
@@ -172,6 +202,7 @@ Always use she/her pronouns when referring to Aobakwe. Be friendly, concise, and
                 </div>
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="chatbot-input-container">
